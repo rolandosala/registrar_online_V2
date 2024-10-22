@@ -7,7 +7,7 @@
     <div class="form">
         <input type="text" placeholder="Firstname" required v-model="firstname">
         <input type="text" placeholder="Lastname" required v-model="lastname">
-        <button @click="createUser">Create User</button>
+        <button @click="addRequest">Create User</button>
     </div>
     <div>
         <ul v-for="u in users" :key="u.firstname">
@@ -22,7 +22,7 @@ import { RouterLink } from 'vue-router';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/firebase/init';
 import { db } from '@/firebase/init';
-import { addDoc, collection, query, getDocs, onSnapshot, doc } from 'firebase/firestore';
+import { addDoc, collection, query, getDocs, onSnapshot, doc, setDoc } from 'firebase/firestore';
 /* import IncrementCounter from '@/components/IncrementCounter.vue';
 import { mapGetters } from 'vuex';
 export default {
@@ -37,7 +37,7 @@ export default {
             firstname: '',
             lastname: '',
             user: auth.currentUser.displayName,
-            users: []
+            users: [],
         }
     },
     created() {
@@ -66,17 +66,33 @@ export default {
             querySnap.forEach((doc) => {
                 this.users.push(doc.data());
             })
-          /* onSnapshot(query(collection(db,'users'))),
-           (snap) => {
-            snap.forEach((doc) => {
-                this.users.push(doc.data())
-            })
-           } */
-          /* onSnapshot(doc(db, 'users'), (snap) => {
-            snap.forEach((d) => {
-                this.users.push(d.data())
-            })
-          }) */
+            /* onSnapshot(query(collection(db,'users'))),
+             (snap) => {
+              snap.forEach((doc) => {
+                  this.users.push(doc.data())
+              })
+             } */
+            /* onSnapshot(doc(db, 'users'), (snap) => {
+              snap.forEach((d) => {
+                  this.users.push(d.data())
+              })
+            }) */
+        },
+        async addRequest() {
+            await setDoc(doc(db, 'users', 'SvkyGxEtA6NaUQcwrxtM'), {
+                requestInfo: {
+                    request3: {
+                        request: 'Transcript',
+                        requestDate: 'October 21, 2024',
+                        status: 'Pending'
+                    }
+                }
+            }, { merge: true })
+
+            console.log('Data added')
+        },
+        async getUser() {
+
         }
     }
 }
